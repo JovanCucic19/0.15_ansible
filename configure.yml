@@ -1,0 +1,8 @@
+- name: Configure the 0.15.0 Gamecredits client
+  hosts: 127.0.0.1
+  connection: local
+  roles:
+    - gamecreditsd
+  vars:
+    rpc_user: vagrant
+    rpc_password: vagrant
