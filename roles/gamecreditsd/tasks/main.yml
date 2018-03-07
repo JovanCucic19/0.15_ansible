@@ -16,6 +16,26 @@
     - libboost-test-dev
     - libboost-thread-dev
     - software-properties-common
+    - libexempi3
+    - libpq-dev
+    - python-dev
+    - libffi-dev
+    - libncurses5-dev
+    - libjpeg-dev
+    - zlib1g-dev
+    - libtiff5
+    - ntp
+    - build-essential
+    - libssl-dev
+    - libdb-dev
+    - libdb++-dev
+    - libboost-all-dev
+    - libqrencode-dev
+    - autoconf
+    - automake
+    - pkg-config
+    - unzip
+    - libtool
 
 - name: Add bitcoin ppa
   apt_repository:
@@ -38,7 +58,7 @@
 - name: Clone the GameCredits repository
   git: >
     dest=~/gamecredits
-    repo=https://github.com/samadsajanlal/gamecredits
+    repo=https://github.com/gamecredits-project/GameCredits.git
 
 - name: Run autogen
   command: ./autogen.sh
@@ -46,10 +66,10 @@
     chdir: ~/gamecredits
 
 - name: Run configure
-  command: "./configure"
+  command: "./configure CXXFLAGS=\" -DBOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT=1 -fPIC\" --with-incompatible-bdb"
   args:
     chdir: ~/gamecredits
-
+  
 - name: Compile the wallet
   command: make
   args:
@@ -75,10 +95,6 @@
   command: "supervisorctl update"
   become: True
 
-- name: Restart the gamecreditsd service
-  supervisorctl: name=gamecreditsd state=restarted
-  become: True
-
 - name: Get supervisorctl status
   command: "supervisorctl status"
   register: supervisor_output
@@ -89,4 +105,4 @@
 
 - name: Fail the play if the previous command did not succeed
   fail: msg="Some of the supervisor services failed to start"
-  when: "'FATAL' in supervisor_output.stdout or 'BACKOFF' in supervisor_output.stdout"  
+  when: "'FATAL' in supervisor_output.stdout or 'BACKOFF' in supervisor_output.stdout" 

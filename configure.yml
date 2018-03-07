@@ -3,6 +3,3 @@
   connection: local
   roles:
     - gamecreditsd
-  vars:
-    rpc_user: vagrant
-    rpc_password: vagrant
