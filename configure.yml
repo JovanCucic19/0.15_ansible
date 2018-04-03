@@ -1,6 +1,13 @@
 - name: Configure the 0.15.0 Gamecredits client
-  hosts: 127.0.0.1
-  connection: local
+  hosts: test
+  remote_user: ubuntu
+  gather_facts: False
+  pre_tasks:
+    - name: Install python for Ansible
+      become: true
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: False
+    - setup: # aka gather_facts
   roles:
     - gamecreditsd
   vars:

@@ -16,10 +16,12 @@
     - libboost-test-dev
     - libboost-thread-dev
     - software-properties-common
+  become: True
 
 - name: Add bitcoin ppa
   apt_repository:
     repo: 'ppa:bitcoin/bitcoin'
+  become: True  
 
 - name: Update packages
   become: True
@@ -31,14 +33,16 @@
   with_items:
     - libdb4.8-dev
     - libdb4.8++-dev
+  become: True
 
 - name: Install supervisor
   apt: name=supervisor update_cache=yes state=present
+  become: True
 
 - name: Clone the GameCredits repository
   git: >
     dest=~/gamecredits
-    repo=https://github.com/samadsajanlal/gamecredits
+    repo=https://github.com/gamecredits-project/GameCredits
 
 - name: Run autogen
   command: ./autogen.sh
@@ -89,4 +93,4 @@
 
 - name: Fail the play if the previous command did not succeed
   fail: msg="Some of the supervisor services failed to start"
-  when: "'FATAL' in supervisor_output.stdout or 'BACKOFF' in supervisor_output.stdout"  
+  when: "'FATAL' in supervisor_output.stdout or 'BACKOFF' in supervisor_output.stdout"
